@@ -25,6 +25,8 @@ var render = Render.create({
 var boxA = Bodies.rectangle(150, 20, 50, 78);
 //boxA.set();
 boxA.render.sprite.texture = "./player.png";
+//boxA.inertia = 'Infinity';
+Matter.Body.setInertia(boxA, Infinity);
 //console.log(boxA.render.sprite);
 
 
