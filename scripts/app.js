@@ -32,7 +32,7 @@ Composite.add(engine.world, [player, camera]);
 
 
 function initStage() {
-  for (let i = 1; i < MAX_SCREEN_BLOCK; i++) {
+  for (let i = 2; i < MAX_SCREEN_BLOCK; i++) {
     let _vPosition = (i * 80) + Math.floor(Math.random() * 60);
 
     let _hPosition = Math.floor(Math.random() * 3);
@@ -87,6 +87,7 @@ function isOutOfBund() {
 }
 
 var startTime = null;
+var Score = 0;
 Matter.Events.on(render, "afterRender", (obj) => {
   Render.lookAt(render, [camera], Matter.Vector.create(150, 50));
   Matter.Body.setPosition(camera, Matter.Vector.create(camera.position.x, camera.position.y + 2));
@@ -100,6 +101,8 @@ Matter.Events.on(render, "afterRender", (obj) => {
     Render.stop(render);
     document.getElementById('msg').innerHTML="GG";
   }
+  Score++;
+  document.getElementById('score').innerHTML="Score: "+Score;
 
 });
 
