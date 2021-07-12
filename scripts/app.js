@@ -1,4 +1,5 @@
 const MOV_STEP = 20;
+const MAX_SCREEN_BLOCK = 5;
 
 var Engine = Matter.Engine,
   Render = Matter.Render,
@@ -14,56 +15,92 @@ var render = Render.create({
   options: {
     width: 300,
     height: 400,
-    //wireframes: false
+    wireframes: false
   },
 });
 
 var player = Bodies.rectangle(50, 20, 20, 20);
-player.render.sprite.texture = "./player.png";
+player.render.sprite.texture = "./player2.png";
 Matter.Body.setInertia(player, Infinity);
 
+var camera = Bodies.rectangle(150, 200, 20, 20, { isStatic: true, render: { visible: false } });
+
 //var ground = Bodies.rectangle(150, 1600, 280, 30, { isStatic: true });
-//var ground2 = Bodies.rectangle(0, 800, 810, 60, { isStatic: true });
 
-Composite.add(engine.world, [player]);
+Composite.add(engine.world, [player, camera]);
 
-function genRandomBlock() {    
-    var blockPosition = Math.floor(Math.random() * 3);
-    console.log(blockPosition);
-    switch (blockPosition) {
+
+
+function initStage() {
+  for (let i = 1; i < MAX_SCREEN_BLOCK; i++) {
+    let _vPosition = (i * 80) + Math.floor(Math.random() * 60);
+
+    let _hPosition = Math.floor(Math.random() * 3);
+    let block;
+    switch (_hPosition) {
       case 0:
-        var block = Bodies.rectangle(0, player.position.y+50, 60, 30, { isStatic: true });
-        console.log('gen 1');
+        block = Bodies.rectangle(35, _vPosition, 60, 30, { isStatic: true });
+        Composite.add(engine.world, [block]);
         break;
       case 1:
-        var block = Bodies.rectangle(100,  player.position.y+50, 60, 30, { isStatic: true });
-        console.log('gen 2');
-
-          break;
+        block = Bodies.rectangle(135, _vPosition, 60, 30, { isStatic: true });
+        Composite.add(engine.world, [block]);
+        break;
       case 2:
-        var block = Bodies.rectangle(200,  player.position.y+50, 60, 30, { isStatic: true });
-        console.log('gen 3');
-
+        block = Bodies.rectangle(235, _vPosition, 60, 30, { isStatic: true });
+        Composite.add(engine.world, [block]);
         break;
       default:
         break;
     }
-    Composite.add(engine.world, [block]);
-    //console.log(blockPosition);
+  }
+}
+
+initStage();
+
+
+function genRandomBlock() {
+  let _vPosition = render.bounds.max.y;
+
+  let _hPosition = Math.floor(Math.random() * 3);
+  let block;
+  switch (_hPosition) {
+    case 0:
+      block = Bodies.rectangle(35, _vPosition, 60, 30, { isStatic: true });
+      Composite.add(engine.world, [block]);
+      break;
+    case 1:
+      block = Bodies.rectangle(135, _vPosition, 60, 30, { isStatic: true });
+      Composite.add(engine.world, [block]);
+      break;
+    case 2:
+      block = Bodies.rectangle(235, _vPosition, 60, 30, { isStatic: true });
+      Composite.add(engine.world, [block]);
+      break;
+    default:
+      break;
+  }
+}
+
+function isOutOfBund() {
+  return (player.position.y > render.bounds.max.y) || (player.position.y < render.bounds.min.y) ;
 }
 
 var startTime = null;
 Matter.Events.on(render, "afterRender", (obj) => {
-  var object={x:150, y:player.position.y+150};
-  Render.lookAt(render, [object], Matter.Vector.create(150, 50));
-  
-  if(obj.timestamp - startTime > 1000){
+  Render.lookAt(render, [camera], Matter.Vector.create(150, 50));
+  Matter.Body.setPosition(camera, Matter.Vector.create(camera.position.x, camera.position.y + 2));
+
+  if (obj.timestamp - startTime > 1000) {
     genRandomBlock();
     startTime = obj.timestamp;
   }
-  
 
-  //console.log(obj.timestamp);
+  if (isOutOfBund()) {
+    Render.stop(render);
+    document.getElementById('msg').innerHTML="GG";
+  }
+
 });
 
 Render.run(render);
@@ -72,10 +109,23 @@ Runner.run(runner, engine);
 
 function left() {
   var width = player.bounds.max.x - player.bounds.min.x;
-  Matter.Body.setPosition(player, Matter.Vector.create(Math.max(width/2, player.position.x-MOV_STEP), player.position.y));
+  Matter.Body.setPosition(player, Matter.Vector.create(Math.max(width / 2, player.position.x - MOV_STEP), player.position.y));
 }
 
 function right() {
   var width = player.bounds.max.x - player.bounds.min.x;
-  Matter.Body.setPosition(player, Matter.Vector.create(Math.min(300-(width/2), player.position.x+MOV_STEP), player.position.y));
+  Matter.Body.setPosition(player, Matter.Vector.create(Math.min(300 - (width / 2), player.position.x + MOV_STEP), player.position.y));
+}
+
+document.addEventListener('keydown', keyEvent);
+function keyEvent(e) {
+  if (e.code == 'ArrowRight') {
+    right();
+
+  }
+  else if (e.code == 'ArrowLeft') {
+    left()
+  }
+
+  //console.log(e.code);
 }
