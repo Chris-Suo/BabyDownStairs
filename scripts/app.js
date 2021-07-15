@@ -5,6 +5,8 @@ var Engine = Matter.Engine,
   Render = Matter.Render,
   Runner = Matter.Runner,
   Bodies = Matter.Bodies,
+  Mouse = Matter.Mouse,
+  MouseConstraint = Matter.MouseConstraint,
   Composite = Matter.Composite;
 
 var engine = Engine.create();
@@ -18,6 +20,15 @@ var render = Render.create({
     wireframes: false
   },
 });
+
+var mouse = Mouse.create(render.canvas);
+render.mouse = mouse;
+// Events.on(mouseConstraint, 'mousedown', function(event) {
+//   var mousePosition = event.mouse.position;
+//   console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
+//   shakeScene(engine);
+// });
+
 
 var player = Bodies.rectangle(50, 20, 20, 20);
 player.render.sprite.texture = "./player2.png";
