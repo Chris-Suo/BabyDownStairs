@@ -3,6 +3,15 @@
     font-size: 28px;
 
 }
+
+#score{
+    font-size: 1.2rem;
+}
+
+#msg{
+    color: red;
+}
+
 body{
     text-align: center;
 }

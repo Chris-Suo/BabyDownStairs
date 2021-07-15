@@ -6,6 +6,7 @@ var Engine = Matter.Engine,
   Runner = Matter.Runner,
   Bodies = Matter.Bodies,
   Mouse = Matter.Mouse,
+  Events = Matter.Events,
   MouseConstraint = Matter.MouseConstraint,
   Composite = Matter.Composite;
 
@@ -17,30 +18,51 @@ var render = Render.create({
   options: {
     width: 300,
     height: 400,
-    wireframes: false
+    wireframes: false,
+    background: '#5B5B5B'
   },
 });
+//render.texture = 'bg.png';
 
-var mouse = Mouse.create(render.canvas);
+var mouse = Mouse.create(render.canvas),
+mouseConstraint = MouseConstraint.create(engine, {
+    mouse: mouse,
+    // constraint: {
+    //     stiffness: 0.2,
+    //     render: {
+    //         visible: false
+    //     }
+    // }
+});
+
 render.mouse = mouse;
-// Events.on(mouseConstraint, 'mousedown', function(event) {
-//   var mousePosition = event.mouse.position;
-//   console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
-//   shakeScene(engine);
-// });
-
 
 var player = Bodies.rectangle(50, 20, 20, 20);
 player.render.sprite.texture = "./player2.png";
 Matter.Body.setInertia(player, Infinity);
 
-var camera = Bodies.rectangle(150, 200, 20, 20, { isStatic: true, render: { visible: false } });
+var camera = Bodies.rectangle(150, 200, 20, 20, { isStatic: true, render: { visible: false }, collisionFilter: { mask: 0x00000000 } });
 
-//var ground = Bodies.rectangle(150, 1600, 280, 30, { isStatic: true });
+// var ground = Bodies.rectangle(150, 300, 280, 30, 
+//   { isStatic: true,
+//     render: { visible: false },
+//     collisionFilter: {
+//       mask: 0x00000000,
+//   }, });
 
-Composite.add(engine.world, [player, camera]);
+Composite.add(engine.world, [player, camera, mouseConstraint]);
 
-
+Events.on(mouseConstraint, 'mousedown', function(event) {
+  var mousePosition = event.mouse.position;
+  if(mousePosition.x <= 150){
+    left();
+  }
+  else{
+    right();
+  }
+  //console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
+  //shakeScene(engine);
+});
 
 function initStage() {
   for (let i = 2; i < MAX_SCREEN_BLOCK; i++) {
@@ -51,14 +73,17 @@ function initStage() {
     switch (_hPosition) {
       case 0:
         block = Bodies.rectangle(35, _vPosition, 60, 30, { isStatic: true });
+        block.render.sprite.texture = "brick-subsea_60_30.png";
         Composite.add(engine.world, [block]);
         break;
       case 1:
         block = Bodies.rectangle(135, _vPosition, 60, 30, { isStatic: true });
+        block.render.sprite.texture = "brick-subsea_60_30.png";
         Composite.add(engine.world, [block]);
         break;
       case 2:
         block = Bodies.rectangle(235, _vPosition, 60, 30, { isStatic: true });
+        block.render.sprite.texture = "brick-subsea_60_30.png";
         Composite.add(engine.world, [block]);
         break;
       default:
@@ -78,14 +103,17 @@ function genRandomBlock() {
   switch (_hPosition) {
     case 0:
       block = Bodies.rectangle(35, _vPosition, 60, 30, { isStatic: true });
+      block.render.sprite.texture = "brick-subsea_60_30.png";
       Composite.add(engine.world, [block]);
       break;
     case 1:
       block = Bodies.rectangle(135, _vPosition, 60, 30, { isStatic: true });
+      block.render.sprite.texture = "brick-subsea_60_30.png";
       Composite.add(engine.world, [block]);
       break;
     case 2:
       block = Bodies.rectangle(235, _vPosition, 60, 30, { isStatic: true });
+      block.render.sprite.texture = "brick-subsea_60_30.png";
       Composite.add(engine.world, [block]);
       break;
     default:
