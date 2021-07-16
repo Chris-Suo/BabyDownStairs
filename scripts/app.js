@@ -69,20 +69,21 @@ function initStage() {
     let _vPosition = (i * 80) + Math.floor(Math.random() * 60);
 
     let _hPosition = Math.floor(Math.random() * 3);
+    let xOffset = Math.floor(Math.random() * 40); 
     let block;
     switch (_hPosition) {
       case 0:
-        block = Bodies.rectangle(35, _vPosition, 60, 30, { isStatic: true });
+        block = Bodies.rectangle(35+xOffset, _vPosition, 60, 30, { isStatic: true });
         block.render.sprite.texture = "brick-subsea_60_30.png";
         Composite.add(engine.world, [block]);
         break;
       case 1:
-        block = Bodies.rectangle(135, _vPosition, 60, 30, { isStatic: true });
+        block = Bodies.rectangle(135+xOffset, _vPosition, 60, 30, { isStatic: true });
         block.render.sprite.texture = "brick-subsea_60_30.png";
         Composite.add(engine.world, [block]);
         break;
       case 2:
-        block = Bodies.rectangle(235, _vPosition, 60, 30, { isStatic: true });
+        block = Bodies.rectangle(235+xOffset, _vPosition, 60, 30, { isStatic: true });
         block.render.sprite.texture = "brick-subsea_60_30.png";
         Composite.add(engine.world, [block]);
         break;
@@ -99,20 +100,21 @@ function genRandomBlock() {
   let _vPosition = render.bounds.max.y;
 
   let _hPosition = Math.floor(Math.random() * 3);
+  let xOffset = Math.floor(Math.random() * 40); 
   let block;
   switch (_hPosition) {
     case 0:
-      block = Bodies.rectangle(35, _vPosition, 60, 30, { isStatic: true });
+      block = Bodies.rectangle(35+xOffset, _vPosition, 60, 30, { isStatic: true });
       block.render.sprite.texture = "brick-subsea_60_30.png";
       Composite.add(engine.world, [block]);
       break;
     case 1:
-      block = Bodies.rectangle(135, _vPosition, 60, 30, { isStatic: true });
+      block = Bodies.rectangle(135+xOffset, _vPosition, 60, 30, { isStatic: true });
       block.render.sprite.texture = "brick-subsea_60_30.png";
       Composite.add(engine.world, [block]);
       break;
     case 2:
-      block = Bodies.rectangle(235, _vPosition, 60, 30, { isStatic: true });
+      block = Bodies.rectangle(235+xOffset, _vPosition, 60, 30, { isStatic: true });
       block.render.sprite.texture = "brick-subsea_60_30.png";
       Composite.add(engine.world, [block]);
       break;
@@ -131,7 +133,7 @@ Matter.Events.on(render, "afterRender", (obj) => {
   Render.lookAt(render, [camera], Matter.Vector.create(150, 50));
   Matter.Body.setPosition(camera, Matter.Vector.create(camera.position.x, camera.position.y + 2));
 
-  if (obj.timestamp - startTime > 1000) {
+  if (obj.timestamp - startTime > 600) {
     genRandomBlock();
     startTime = obj.timestamp;
   }
